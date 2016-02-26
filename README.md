@@ -25,6 +25,8 @@ lz77_compress(decompressed, &mut recompressed);
 
 You can also run `cargo doc` to get a local copy of documentation.
 
+A simple description of algorithms and basic ideas can be found [here](http://zhaihj.github.io/description-of-lz77.html). 
+
 ### LICENSE
 
 MIT
