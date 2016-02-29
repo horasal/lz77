@@ -62,17 +62,18 @@ pub fn lz77_compress(input: &[u8], output: &mut Vec<u8>) {
     let mut flag_byte: u8;
     let mut bit: u8;
     let mut buffer = [0u8; MAX_BUFFER];
+    let mut pad = 3;
     while current_pos < input.len() {
         flag_byte = 0;
         current_buffer = 0;
-        for _ in 0..8 {
+        for bit_pos in 0..8 {
             if current_pos >= input.len() {
+                pad = 0;
+                flag_byte = flag_byte >> (8 - bit_pos);
                 buffer[current_buffer] = 0;
-                window[current_window] = 0;
-                current_buffer += 1;
-                current_pos += 1;
-                current_window += 1;
-                bit = 0;
+                buffer[current_buffer + 1] = 0;
+                current_buffer += 2;
+                break;
             } else {
                 match match_window(&window, current_window, input, current_pos) {
                     Some((pos, len)) if len >= THRESHOLD => {
@@ -111,9 +112,7 @@ pub fn lz77_compress(input: &[u8], output: &mut Vec<u8>) {
             output.push(buffer[i]);
         }
     }
-    output.push(0u8);
-    output.push(0u8);
-    output.push(0u8);
+    for _ in 0 .. pad { output.push(0u8); }
 }
 
 /// `lz77_compress_dummy` makes the `input` valid for decompress without really compressing the data.
