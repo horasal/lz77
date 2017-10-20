@@ -5,10 +5,8 @@ fn main() {
 let data = [185 ,254 ,185 ,254 ,185 ,254 ,185 ,254 ,33
             ,33 ,33 ,43 ,42 ,35 ,38 ,42 ,40 ,35 ,38 ,40
             ,42 ,35 ,38 ,40 ,42 ,35 ,64];
-let mut comp = Vec::new();
-lz77_compress(&data, &mut comp);
-let mut dec = Vec::new();
-lz77_decompress(&comp, &mut dec);
+let comp = lz77_compress(&data);
+let dec = lz77_decompress(&comp);
 
 //assertion raised!!!!!!!
 //assert!(comp.len() < data.len());

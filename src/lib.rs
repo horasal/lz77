@@ -3,9 +3,9 @@
 //! This package contains three functions:
 //!
 //! ```text
-//! lz77_decompress(&[u8], &mut Vec<u8>)
-//! lz77_compress(&[u8], &mut Vec<u8>)
-//! lz77_compress_dummy(&[u8], &mut Vec<u8>)
+//! lz77_decompress(&[u8]) -> Vec<u8> 
+//! lz77_compress(&[u8]) -> Vec<u8> 
+//! lz77_compress_dummy(&[u8]) -> Vec<u8>
 //! ```
 //!
 //! ## Example
@@ -15,10 +15,9 @@
 //! use lz77::{lz77_compress, lz77_decompress};
 //!
 //! let data = [0u8; 50];
-//! let mut comp = Vec::new();
-//! lz77_compress(&data, &mut comp);
+//! let comp = lz77_compress(&data);
 //! let mut dec = Vec::new();
-//! lz77_decompress(&comp, &mut dec);
+//! let dec = lz77_decompress(&comp);
 //! assert!(comp.len() < data.len());
 //! assert_eq!(data.to_vec(), dec);
 //! ```
@@ -33,10 +32,8 @@ mod tests {
     fn test_lz77_compress() {
         {
             let data = [0u8; 50];
-            let mut comp = Vec::new();
-            lz77_compress(&data, &mut comp);
-            let mut dec = Vec::new();
-            lz77_decompress(&comp, &mut dec);
+            let comp = lz77_compress(&data);
+            let dec = lz77_decompress(&comp);
             assert!(comp.len() < data.len());
             assert_eq!(data.to_vec(), dec);
         }
@@ -45,10 +42,8 @@ mod tests {
             for i in 0..0x80 {
                 data[i] = i as u8 % 0x10u8;
             }
-            let mut comp = Vec::new();
-            lz77_compress(&data, &mut comp);
-            let mut dec = Vec::new();
-            lz77_decompress(&comp, &mut dec);
+            let comp = lz77_compress(&data);
+            let dec = lz77_decompress(&comp);
             assert!(comp.len() < data.len());
             assert_eq!(data.to_vec(), dec);
         }
@@ -57,10 +52,8 @@ mod tests {
             for i in 0..0x3000 {
                 data[i] = i as u8 / 0x10u8;
             }
-            let mut comp = Vec::new();
-            lz77_compress(&data, &mut comp);
-            let mut dec = Vec::new();
-            lz77_decompress(&comp, &mut dec);
+            let comp = lz77_compress(&data);
+            let dec = lz77_decompress(&comp);
             assert!(comp.len() < data.len());
             assert_eq!(data.to_vec(), dec);
         }
@@ -70,18 +63,14 @@ mod tests {
     fn test_lz77_compress_dummy() {
         {
             let data = [0u8; 50];
-            let mut comp = Vec::new();
-            lz77_compress_dummy(&data, &mut comp);
-            let mut dec = Vec::new();
-            lz77_decompress(&comp, &mut dec);
+            let comp = lz77_compress_dummy(&data);
+            let dec = lz77_decompress(&comp);
             assert_eq!(data.to_vec(), dec);
         }
         {
             let data = [0u8; 80];
-            let mut comp = Vec::new();
-            lz77_compress_dummy(&data, &mut comp);
-            let mut dec = Vec::new();
-            lz77_decompress(&comp, &mut dec);
+            let comp = lz77_compress_dummy(&data);
+            let dec = lz77_decompress(&comp);
             assert_eq!(data.to_vec(), dec);
         }
         {
@@ -89,10 +78,8 @@ mod tests {
             for i in 0..0x3000 {
                 data[i] = i as u8 / 0x10u8;
             }
-            let mut comp = Vec::new();
-            lz77_compress_dummy(&data, &mut comp);
-            let mut dec = Vec::new();
-            lz77_decompress(&comp, &mut dec);
+            let comp = lz77_compress_dummy(&data);
+            let dec = lz77_decompress(&comp);
             assert_eq!(data.to_vec(), dec);
         }
     }
