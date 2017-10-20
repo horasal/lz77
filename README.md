@@ -13,10 +13,9 @@ Then you are able to compress/decompress lz77 data:
 ```rust
 use lz77::{lz77_compress, lz77_decompress};
 
-let mut decompressed= Vec::new();
-lz77_decompress(compressed, &mut decompressed);
-let mut recompressed  = Vec::new();
-lz77_compress(decompressed, &mut recompressed);
+let compressed = ... // read your data here
+let decompressed = lz77_decompress(compressed, &mut decompressed);
+let recompressed = lz77_compress(decompressed, &mut recompressed);
 ```
 
 ### Documentation
