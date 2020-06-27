@@ -3,8 +3,8 @@
 //! This package contains three functions:
 //!
 //! ```text
-//! lz77_decompress(&[u8]) -> Vec<u8> 
-//! lz77_compress(&[u8]) -> Vec<u8> 
+//! lz77_decompress(&[u8]) -> Vec<u8>
+//! lz77_compress(&[u8]) -> Vec<u8>
 //! lz77_compress_dummy(&[u8]) -> Vec<u8>
 //! ```
 //!

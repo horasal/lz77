@@ -9,8 +9,11 @@ const MAX_BUFFER: usize = 0x10 + 1;
 #[inline]
 fn match_current(window: &[u8], pos: usize, max_len: usize, data: &[u8], dpos: usize) -> usize {
     let mut len = 0;
-    while dpos + len < data.len() && len < max_len &&
-          window[(pos + len) & WINDOW_MASK] == data[dpos + len] && len < MAX_LEN {
+    while dpos + len < data.len()
+        && len < max_len
+        && window[(pos + len) & WINDOW_MASK] == data[dpos + len]
+        && len < MAX_LEN
+    {
         len += 1;
     }
     len
@@ -21,11 +24,13 @@ fn match_window(window: &[u8], pos: usize, data: &[u8], dpos: usize) -> Option<(
     let mut max_pos = 0;
     let mut max_len = 0;
     for i in THRESHOLD..LOOK_RANGE {
-        let len = match_current(&window,
-                                ((pos as isize - i as isize) & WINDOW_MASK as isize) as usize,
-                                i,
-                                &data,
-                                dpos);
+        let len = match_current(
+            &window,
+            ((pos as isize - i as isize) & WINDOW_MASK as isize) as usize,
+            i,
+            &data,
+            dpos,
+        );
         if len >= INPLACE_THRESHOLD {
             return Some((i, len));
         }
@@ -41,7 +46,7 @@ fn match_window(window: &[u8], pos: usize, data: &[u8], dpos: usize) -> Option<(
     }
 }
 
-/// `lz77_compress` compresses the input bytes. 
+/// `lz77_compress` compresses the input bytes.
 ///
 /// ## Input
 ///
@@ -100,24 +105,29 @@ pub fn lz77_compress(input: &[u8]) -> Vec<u8> {
             flag_byte = (flag_byte >> 1) | ((bit & 1u8) << 7);
             current_window = current_window & WINDOW_MASK;
 
-            assert!(current_buffer < MAX_BUFFER,
-                    format!("current buffer {} > max buffer {}",
-                            current_buffer,
-                            MAX_BUFFER));
+            assert!(
+                current_buffer < MAX_BUFFER,
+                format!(
+                    "current buffer {} > max buffer {}",
+                    current_buffer, MAX_BUFFER
+                )
+            );
         }
         output.push(flag_byte);
         for i in 0..current_buffer {
             output.push(buffer[i]);
         }
     }
-    for _ in 0 .. pad { output.push(0u8); }
+    for _ in 0..pad {
+        output.push(0u8);
+    }
 
     output
 }
 
 /// `lz77_compress_dummy` makes the `input` valid for decompress without really compressing the data.
 ///
-/// Technically speaking, this function only inserts the `raw byte flag` to the input for every 8 bytes. 
+/// Technically speaking, this function only inserts the `raw byte flag` to the input for every 8 bytes.
 /// as necessary.
 ///
 /// ## Input
