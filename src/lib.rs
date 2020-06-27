@@ -22,7 +22,8 @@
 //! assert_eq!(data.to_vec(), dec);
 //! ```
 
-pub mod lz77;
+mod lz77;
+pub use lz77::{lz77_compress, lz77_compress_dummy, lz77_decompress};
 
 #[cfg(test)]
 extern crate quickcheck;
@@ -32,7 +33,7 @@ extern crate quickcheck_macros;
 
 #[cfg(test)]
 mod tests {
-    use lz77::{lz77_compress, lz77_compress_dummy, lz77_decompress};
+    use super::*;
 
     #[test]
     fn test_lz77_compress() {

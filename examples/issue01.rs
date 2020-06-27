@@ -1,5 +1,5 @@
 extern crate lz77;
-use lz77::lz77::*;
+use lz77::*;
 
 fn main() {
     let data = [
