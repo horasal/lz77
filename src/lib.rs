@@ -45,8 +45,8 @@ mod tests {
         }
         {
             let mut data = [0u8; 0x80];
-            for i in 0..0x80 {
-                data[i] = i as u8 % 0x10u8;
+            for (i, byte) in data.iter_mut().enumerate() {
+                *byte = i as u8 % 0x10u8;
             }
             let comp = lz77_compress(&data);
             let dec = lz77_decompress(&comp);
@@ -55,8 +55,8 @@ mod tests {
         }
         {
             let mut data = [0u8; 0x3000];
-            for i in 0..0x3000 {
-                data[i] = i as u8 / 0x10u8;
+            for (i, byte) in data.iter_mut().enumerate() {
+                *byte = i as u8 % 0x10u8;
             }
             let comp = lz77_compress(&data);
             let dec = lz77_decompress(&comp);
@@ -81,8 +81,8 @@ mod tests {
         }
         {
             let mut data = [0u8; 0x3000];
-            for i in 0..0x3000 {
-                data[i] = i as u8 / 0x10u8;
+            for (i, byte) in data.iter_mut().enumerate() {
+                *byte = i as u8 % 0x10u8;
             }
             let comp = lz77_compress_dummy(&data);
             let dec = lz77_decompress(&comp);

@@ -72,7 +72,7 @@ pub fn lz77_compress(input: &[u8]) -> Vec<u8> {
         for bit_pos in 0..8 {
             if current_pos >= input.len() {
                 pad = 0;
-                flag_byte = flag_byte >> (8 - bit_pos);
+                flag_byte >>= 8 - bit_pos;
                 buffer[current_buffer] = 0;
                 buffer[current_buffer + 1] = 0;
                 current_buffer += 2;
@@ -103,7 +103,7 @@ pub fn lz77_compress(input: &[u8]) -> Vec<u8> {
                 }
             }
             flag_byte = (flag_byte >> 1) | ((bit & 1u8) << 7);
-            current_window = current_window & WINDOW_MASK;
+            current_window &= WINDOW_MASK;
 
             assert!(
                 current_buffer < MAX_BUFFER,
@@ -114,8 +114,8 @@ pub fn lz77_compress(input: &[u8]) -> Vec<u8> {
             );
         }
         output.push(flag_byte);
-        for i in 0..current_buffer {
-            output.push(buffer[i]);
+        for byte in buffer.iter().take(current_buffer) {
+            output.push(*byte);
         }
     }
     for _ in 0..pad {
@@ -152,8 +152,8 @@ pub fn lz77_compress_dummy(input: &[u8]) -> Vec<u8> {
     } else {
         let extra_bytes = input.len() % 8;
         output.push(0xFFu8 >> (8 - extra_bytes));
-        for i in input.len() - extra_bytes..input.len() {
-            output.push(input[i]);
+        for byte in input.iter().skip(input.len() - extra_bytes) {
+            output.push(*byte);
         }
         output.push(0u8);
         output.push(0u8);
@@ -208,7 +208,7 @@ pub fn lz77_decompress(input: &[u8]) -> Vec<u8> {
                     output.push(b);
                     window[window_cursor] = b;
                     window_cursor = (window_cursor + 1) & WINDOW_MASK;
-                    position = position + 1;
+                    position += 1;
                 }
             }
         }
