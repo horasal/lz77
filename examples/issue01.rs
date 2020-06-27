@@ -1,5 +1,5 @@
-extern crate lz77;
-use lz77::*;
+extern crate konami_lz77;
+use konami_lz77::*;
 
 fn main() {
     let data = [

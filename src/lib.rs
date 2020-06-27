@@ -11,8 +11,8 @@
 //! ## Example
 //!
 //! ```text
-//! extern crate lz77;
-//! use lz77::{compress, decompress};
+//! extern crate konami_lz77;
+//! use konami_lz77::{compress, decompress};
 //!
 //! let data = [0u8; 50];
 //! let comp = compress(&data);
