@@ -8,3 +8,7 @@ readme = "README.md"
 license = "MIT"
 
 [dependencies]
+
+[dev-dependencies]
+quickcheck = "0.9"
+quickcheck_macros = "0.9"

@@ -25,6 +25,12 @@
 pub mod lz77;
 
 #[cfg(test)]
+extern crate quickcheck;
+#[cfg(test)]
+#[macro_use(quickcheck)]
+extern crate quickcheck_macros;
+
+#[cfg(test)]
 mod tests {
     use lz77::{lz77_compress, lz77_compress_dummy, lz77_decompress};
 
@@ -82,5 +88,15 @@ mod tests {
             let dec = lz77_decompress(&comp);
             assert_eq!(data.to_vec(), dec);
         }
+    }
+
+    #[quickcheck]
+    fn test_lz77_compress_prop(data: Vec<u8>) -> bool {
+        lz77_decompress(&lz77_compress(&data)) == data
+    }
+
+    #[quickcheck]
+    fn test_lz77_compress_dummy_prop(data: Vec<u8>) -> bool {
+        lz77_decompress(&lz77_compress_dummy(&data)) == data
     }
 }
