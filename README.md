@@ -11,11 +11,11 @@ lz77 = "0.1"
 Then you are able to compress/decompress lz77 data:
 
 ```rust
-use lz77::{lz77_compress, lz77_decompress};
+use lz77::{compress, decompress};
 
 let compressed = ... // read your data here
-let decompressed = lz77_decompress(compressed, &mut decompressed);
-let recompressed = lz77_compress(decompressed, &mut recompressed);
+let decompressed = decompress(compressed, &mut decompressed);
+let recompressed = compress(decompressed, &mut recompressed);
 ```
 
 ### Documentation

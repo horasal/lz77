@@ -46,7 +46,7 @@ fn match_window(window: &[u8], pos: usize, data: &[u8], dpos: usize) -> Option<(
     }
 }
 
-/// `lz77_compress` compresses the input bytes.
+/// `compress` compresses the input bytes.
 ///
 /// ## Input
 ///
@@ -56,7 +56,7 @@ fn match_window(window: &[u8], pos: usize, data: &[u8], dpos: usize) -> Option<(
 ///
 /// bytes of compressed data
 ///
-pub fn lz77_compress(input: &[u8]) -> Vec<u8> {
+pub fn compress(input: &[u8]) -> Vec<u8> {
     let mut output = Vec::new();
     let mut window = [0u8; WINDOW_SIZE];
     let mut current_pos = 0;
@@ -125,7 +125,7 @@ pub fn lz77_compress(input: &[u8]) -> Vec<u8> {
     output
 }
 
-/// `lz77_compress_dummy` makes the `input` valid for decompress without really compressing the data.
+/// `compress_dummy` makes the `input` valid for decompress without really compressing the data.
 ///
 /// Technically speaking, this function only inserts the `raw byte flag` to the input for every 8 bytes.
 /// as necessary.
@@ -138,7 +138,7 @@ pub fn lz77_compress(input: &[u8]) -> Vec<u8> {
 ///
 /// bytes of raw data with 0xFF every 8 bytes.
 ///
-pub fn lz77_compress_dummy(input: &[u8]) -> Vec<u8> {
+pub fn compress_dummy(input: &[u8]) -> Vec<u8> {
     let mut output = Vec::new();
     for i in 0..input.len() / 8 {
         output.push(0xFF);
@@ -164,7 +164,7 @@ pub fn lz77_compress_dummy(input: &[u8]) -> Vec<u8> {
     output
 }
 
-/// `lz77_decompress` decompresses a compressed `input` array to raw bytes.
+/// `decompress` decompresses a compressed `input` array to raw bytes.
 ///
 /// There is no need to set the size of output. This function will adjust
 /// as necessary.
@@ -177,7 +177,7 @@ pub fn lz77_compress_dummy(input: &[u8]) -> Vec<u8> {
 ///
 /// bytes of raw data
 ///
-pub fn lz77_decompress(input: &[u8]) -> Vec<u8> {
+pub fn decompress(input: &[u8]) -> Vec<u8> {
     let mut output = Vec::new();
     let mut cur_byte = 0;
     let data_size = input.len();

@@ -6,8 +6,8 @@ fn main() {
         185, 254, 185, 254, 185, 254, 185, 254, 33, 33, 33, 43, 42, 35, 38, 42, 40, 35, 38, 40, 42,
         35, 38, 40, 42, 35, 64,
     ];
-    let comp = lz77_compress(&data);
-    let dec = lz77_decompress(&comp);
+    let comp = compress(&data);
+    let dec = decompress(&comp);
 
     //assertion raised!!!!!!!
     //assert!(comp.len() < data.len());
