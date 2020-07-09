@@ -5,17 +5,17 @@
 Add the following line to the `dependencies` section in your `Cargo.toml` file:
 
 ```toml
-lz77 = "0.1"
+konami_lz77 = "0.2"
 ```
 
 Then you are able to compress/decompress lz77 data:
 
 ```rust
-use lz77::{lz77_compress, lz77_decompress};
+use konami_lz77::{compress, decompress};
 
 let compressed = ... // read your data here
-let decompressed = lz77_decompress(compressed, &mut decompressed);
-let recompressed = lz77_compress(decompressed, &mut recompressed);
+let decompressed = decompress(compressed, &mut decompressed);
+let recompressed = compress(decompressed, &mut recompressed);
 ```
 
 ### Documentation
@@ -29,3 +29,5 @@ A simple description of algorithms and basic ideas can be found [here](http://zh
 ### LICENSE
 
 MIT
+
+This crate is not affiliated with Konami.

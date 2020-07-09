@@ -9,8 +9,11 @@ const MAX_BUFFER: usize = 0x10 + 1;
 #[inline]
 fn match_current(window: &[u8], pos: usize, max_len: usize, data: &[u8], dpos: usize) -> usize {
     let mut len = 0;
-    while dpos + len < data.len() && len < max_len &&
-          window[(pos + len) & WINDOW_MASK] == data[dpos + len] && len < MAX_LEN {
+    while dpos + len < data.len()
+        && len < max_len
+        && window[(pos + len) & WINDOW_MASK] == data[dpos + len]
+        && len < MAX_LEN
+    {
         len += 1;
     }
     len
@@ -21,11 +24,13 @@ fn match_window(window: &[u8], pos: usize, data: &[u8], dpos: usize) -> Option<(
     let mut max_pos = 0;
     let mut max_len = 0;
     for i in THRESHOLD..LOOK_RANGE {
-        let len = match_current(&window,
-                                ((pos as isize - i as isize) & WINDOW_MASK as isize) as usize,
-                                i,
-                                &data,
-                                dpos);
+        let len = match_current(
+            &window,
+            ((pos as isize - i as isize) & WINDOW_MASK as isize) as usize,
+            i,
+            &data,
+            dpos,
+        );
         if len >= INPLACE_THRESHOLD {
             return Some((i, len));
         }
@@ -41,7 +46,7 @@ fn match_window(window: &[u8], pos: usize, data: &[u8], dpos: usize) -> Option<(
     }
 }
 
-/// `lz77_compress` compresses the input bytes. 
+/// `compress` compresses the input bytes.
 ///
 /// ## Input
 ///
@@ -51,7 +56,7 @@ fn match_window(window: &[u8], pos: usize, data: &[u8], dpos: usize) -> Option<(
 ///
 /// bytes of compressed data
 ///
-pub fn lz77_compress(input: &[u8]) -> Vec<u8> {
+pub fn compress(input: &[u8]) -> Vec<u8> {
     let mut output = Vec::new();
     let mut window = [0u8; WINDOW_SIZE];
     let mut current_pos = 0;
@@ -67,7 +72,7 @@ pub fn lz77_compress(input: &[u8]) -> Vec<u8> {
         for bit_pos in 0..8 {
             if current_pos >= input.len() {
                 pad = 0;
-                flag_byte = flag_byte >> (8 - bit_pos);
+                flag_byte >>= 8 - bit_pos;
                 buffer[current_buffer] = 0;
                 buffer[current_buffer + 1] = 0;
                 current_buffer += 2;
@@ -98,26 +103,31 @@ pub fn lz77_compress(input: &[u8]) -> Vec<u8> {
                 }
             }
             flag_byte = (flag_byte >> 1) | ((bit & 1u8) << 7);
-            current_window = current_window & WINDOW_MASK;
+            current_window &= WINDOW_MASK;
 
-            assert!(current_buffer < MAX_BUFFER,
-                    format!("current buffer {} > max buffer {}",
-                            current_buffer,
-                            MAX_BUFFER));
+            assert!(
+                current_buffer < MAX_BUFFER,
+                format!(
+                    "current buffer {} > max buffer {}",
+                    current_buffer, MAX_BUFFER
+                )
+            );
         }
         output.push(flag_byte);
-        for i in 0..current_buffer {
-            output.push(buffer[i]);
+        for byte in buffer.iter().take(current_buffer) {
+            output.push(*byte);
         }
     }
-    for _ in 0 .. pad { output.push(0u8); }
+    for _ in 0..pad {
+        output.push(0u8);
+    }
 
     output
 }
 
-/// `lz77_compress_dummy` makes the `input` valid for decompress without really compressing the data.
+/// `compress_dummy` makes the `input` valid for decompress without really compressing the data.
 ///
-/// Technically speaking, this function only inserts the `raw byte flag` to the input for every 8 bytes. 
+/// Technically speaking, this function only inserts the `raw byte flag` to the input for every 8 bytes.
 /// as necessary.
 ///
 /// ## Input
@@ -128,7 +138,7 @@ pub fn lz77_compress(input: &[u8]) -> Vec<u8> {
 ///
 /// bytes of raw data with 0xFF every 8 bytes.
 ///
-pub fn lz77_compress_dummy(input: &[u8]) -> Vec<u8> {
+pub fn compress_dummy(input: &[u8]) -> Vec<u8> {
     let mut output = Vec::new();
     for i in 0..input.len() / 8 {
         output.push(0xFF);
@@ -142,8 +152,8 @@ pub fn lz77_compress_dummy(input: &[u8]) -> Vec<u8> {
     } else {
         let extra_bytes = input.len() % 8;
         output.push(0xFFu8 >> (8 - extra_bytes));
-        for i in input.len() - extra_bytes..input.len() {
-            output.push(input[i]);
+        for byte in input.iter().skip(input.len() - extra_bytes) {
+            output.push(*byte);
         }
         output.push(0u8);
         output.push(0u8);
@@ -154,7 +164,7 @@ pub fn lz77_compress_dummy(input: &[u8]) -> Vec<u8> {
     output
 }
 
-/// `lz77_decompress` decompresses a compressed `input` array to raw bytes.
+/// `decompress` decompresses a compressed `input` array to raw bytes.
 ///
 /// There is no need to set the size of output. This function will adjust
 /// as necessary.
@@ -167,7 +177,7 @@ pub fn lz77_compress_dummy(input: &[u8]) -> Vec<u8> {
 ///
 /// bytes of raw data
 ///
-pub fn lz77_decompress(input: &[u8]) -> Vec<u8> {
+pub fn decompress(input: &[u8]) -> Vec<u8> {
     let mut output = Vec::new();
     let mut cur_byte = 0;
     let data_size = input.len();
@@ -198,7 +208,7 @@ pub fn lz77_decompress(input: &[u8]) -> Vec<u8> {
                     output.push(b);
                     window[window_cursor] = b;
                     window_cursor = (window_cursor + 1) & WINDOW_MASK;
-                    position = position + 1;
+                    position += 1;
                 }
             }
         }

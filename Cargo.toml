@@ -1,10 +1,14 @@
 [package]
-name = "lz77"
-version = "0.1.1"
+name = "konami-lz77"
+version = "0.2.0"
 authors = ["Hongjie Zhai <zhaihj@live.jp>"]
 description = "LZ77 compress/decompress in the Rust Programming Language"
-repository = "https://github.com/zhaihj/lz77-rust"
+repository = "https://github.com/zhaihj/konami-lz77"
 readme = "README.md"
 license = "MIT"
 
 [dependencies]
+
+[dev-dependencies]
+quickcheck = "0.9"
+quickcheck_macros = "0.9"
